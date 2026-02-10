@@ -105,8 +105,9 @@ print(response.text)
 ### 5.1 GCS 및 IAM 권한 열어주기
 `신규명/타겟명` 프로젝트가 `기존명/소스명` 프로젝트의 모델 또는 학습 데이터에 접근하려면 IAM 작업이 필요합니다.
 
-1. `타겟` 프로젝트의 Vertex AI 서비스 에이전트 계정 복사 
-   - `service-[TARGET_프로젝트_번호]@gcp-sa-aiplatform.iam.gserviceaccount.com`
+1. `타겟` 프로젝트의 Vertex AI 서비스 에이전트 계정 확인
+   - 형식: `service-[TARGET_프로젝트_번호]@gcp-sa-aiplatform.iam.gserviceaccount.com`
+   - **[팁]** IAM 화면에서 해당 계정이 보이지 않는다면 화면 우측 상단의 **'Google 제공 역할 부여 포함(Include Google-provided role grants)'** 체크박스를 켜주세요. (타겟 프로젝트에서 Vertex AI API가 활성화되어 있어야 자동 생성됩니다.)
 2. `소스` 프로젝트 IAM 설정에서 위 계정에 다음 권한 부여:
    - `Vertex AI 사용자` (필수)
    - `저장소 하위 폴더/객체 뷰어` (GCS 에셋 접근용)
