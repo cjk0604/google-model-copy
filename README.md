@@ -112,12 +112,46 @@ print(response.text)
    - `Vertex AI 사용자` (필수)
    - `저장소 하위 폴더/객체 뷰어` (GCS 에셋 접근용)
 
-### 5.2 Model Registry 복사 (UI 방식)
+### 5.2 Model 복사 실행 (UI, CLI, SDK)
+
+사전 권한 부여가 완료되었다면, 다음 세 가지 방법 중 하나를 선택해 모델을 복사할 수 있습니다.
+
+**방법 A: 콘솔 UI (Model Registry) 사용**
 1. `소스` 프로젝트의 **Model Registry** 에 접속합니다.
 2. 튜닝된 모델의 **추가 작업(점 3개)** 버튼 클릭 -> **모델 복사(Copy model)** 선택
 3. **다른 프로젝트로 복사**를 선택하고, 대상 프로젝트를 `타겟` 프로젝트로 지정합니다.
 
-**[주의]** 타겟 프로젝트에도 사용자의 Vertex AI 관리자 권한이 있어야 복사가 가능합니다. 이 복사 과정을 통해 아티팩트가 이전되며 평가 지표 등은 넘어가지 않습니다.
+**방법 B: Google Cloud CLI (gcloud) 사용**
+터미널 환경에서 타겟 프로젝트를 지정하여 직접 명령어를 보냅니다.
+```bash
+gcloud ai models copy \
+  --source-model="projects/SOURCE_PROJECT/locations/us-central1/models/SOURCE_MODEL_ID" \
+  --region="us-central1" \
+  --project="TARGET_PROJECT" \
+  --destination-model-id="my-copied-model"
+```
+
+**방법 C: Python SDK 사용**
+자동화 및 코드로 관리하고 싶을 때 사용합니다.
+```python
+from google.cloud import aiplatform
+
+# 타겟 프로젝트(가져올 곳) 기준으로 초기화
+aiplatform.init(project="TARGET_PROJECT_ID", location="us-central1")
+
+# 원본(소스) 모델 경로
+source_model_path = "projects/SOURCE_PROJECT/locations/us-central1/models/SOURCE_MODEL_ID"
+
+# 모델 복사 실행
+copied_model = aiplatform.Model.copy(
+    source_model=source_model_path,
+    destination_model_id="my-copied-model"
+)
+
+print(f"복사 완료! 타겟 모델 경로: {copied_model.resource_name}")
+```
+
+**[주의]** 어떤 방법을 사용하든 명령을 수행하는 사용자 본인도 양쪽 프로젝트에 대한 적절한 권한(Vertex AI 관리자/사용자)을 보유해야 합니다. 복사 과정을 통해 모델 아티팩트(가중치)는 이전되지만, **기존 평가 지표, 학습에 사용된 GCS 원본 데이터, 학습 파이프라인 기록 등은 함께 이전되지 않습니다.**
 
 ### 5.3 (대안) 재학습을 통한 분리 아키텍처 (권장)
 UI 복사가 제약되거나 완벽한 독립/분리 관리가 필요한 경우, 아티팩트를 복사하기보다 **공유된 GCS 학습 데이터를 바탕으로 `타겟` 프로젝트 내에서 직접 신규 파인튜닝 Job을 구동하는 것**이 운영 관리상 훨씬 유리합니다.
