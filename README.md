@@ -24,8 +24,8 @@ Gemini 파인튜닝 데이터는 **JSON Lines (JSONL)** 형식을 사용해야 �
 
 **데이터 예시 (`train_data.jsonl`)**
 ```json
-{"messages": [{"role": "system", "content": "너는 여행 전문가야."}, {"role": "user", "content": "제주도 2박3일 일정 추천해줘"}, {"role": "model", "content": "제주도 2박 3일 일정을 추천해 드릴게요..."}]}
-{"messages": [{"role": "user", "content": "사과가 영어로 뭐야?"}, {"role": "model", "content": "사과는 영어로 Apple 입니다."}]}
+{"systemInstruction": {"role": "system", "parts": [{"text": "너는 여행 전문가야."}]}, "contents": [{"role": "user", "parts": [{"text": "제주도 2박3일 일정 추천해줘"}]}, {"role": "model", "parts": [{"text": "제주도 2박 3일 일정을 추천해 드릴게요..."}]}]}
+{"contents": [{"role": "user", "parts": [{"text": "사과가 영어로 뭐야?"}]}, {"role": "model", "parts": [{"text": "사과는 영어로 Apple 입니다."}]}]}
 ```
 
 작성이 완료된 파일은 생성해둔 GCS 버킷에 업로드합니다. (`gs://my-gemini-tuning-bucket/train_data.jsonl`)
