@@ -13,6 +13,37 @@
   - Cloud Storage API (`storage.googleapis.com`)
 - **Cloud Storage 버킷**: 학습 데이터(`.jsonl`)를 업로드할 GCS 버킷 생성 (예: `gs://my-gemini-tuning-bucket`)
 
+### 1.1 인증(Authentication) 설정
+
+스크립트를 실행하는 환경에 따라 올바른 권한 및 계정 연동이 필요합니다.
+
+**방법 A. 로컬(Mac/Windows) 환경**
+터미널에서 직접 웹 브라우저를 띄워 로그인합니다.
+```bash
+gcloud auth application-default login
+gcloud auth application-default set-quota-project TARGET_PROJECT_ID
+```
+
+**방법 B. 브라우저가 없는 원격 서버 (예: AWS EC2, GCE, SSH)**
+터미널에 텍스트 기반 링크를 출력받아 인증을 수행합니다.
+```bash
+gcloud auth application-default login --no-browser
+# 콘솔에 출력된 "https://accounts.google.com/..." 링크를 
+# 로컬 브라우저에 붙여넣고 로그인 후, 발급된 코드를 다시 EC2 셸에 입력합니다.
+```
+
+**방법 C. CI/CD 또는 프로덕션 서버 (서비스 계정 JSON 키 사용)**
+사람의 개입 없이 코드로만 동작해야 할 때(Airflow, 백그라운드 서버 등) 가장 권장하는 방식입니다. 양쪽 프로젝트 리소스 접근 권한이 부여된 서비스 계정 키 파일을 업로드하여 사용합니다.
+```bash
+# JSON 키 파일(key.json)을 서버에 위치시킨 뒤 환경 변수로 지정합니다. 
+# (이 방법을 쓰면 gcloud login 명령어가 필요 없습니다.)
+export GOOGLE_APPLICATION_CREDENTIALS="/home/ubuntu/key.json"
+```
+
+> **📚 Google Cloud 공식 문서 참고:**
+> - [로컬 개발 환경 인증(ADC 설정)](https://cloud.google.com/docs/authentication/provide-credentials-adc#local-dev)
+> - [서비스 계정 키를 사용한 리소스 권한 부여](https://cloud.google.com/docs/authentication/provide-credentials-adc#attached-sa)
+
 ---
 
 ## 2. 학습 데이터 준비 (JSONL 포맷)
@@ -136,15 +167,18 @@ gcloud ai models copy \
 ```python
 from google.cloud import aiplatform
 
-# 타겟 프로젝트(가져올 곳) 기준으로 초기화
+# 타겟 프로젝트(복사하여 저장할 곳) 기준으로 초기화
 aiplatform.init(project="TARGET_PROJECT_ID", location="us-central1")
 
 # 원본(소스) 모델 경로
 source_model_path = "projects/SOURCE_PROJECT/locations/us-central1/models/SOURCE_MODEL_ID"
 
-# 모델 복사 실행
-copied_model = aiplatform.Model.copy(
-    source_model=source_model_path,
+# 1. 소스 모델 객체 인스턴스화
+source_model_obj = aiplatform.Model(model_name=source_model_path)
+
+# 2. 모델 복사 실행 (인스턴스의 copy 메서드 호출 및 destination_location 필수 전달)
+copied_model = source_model_obj.copy(
+    destination_location="us-central1",
     destination_model_id="my-copied-model"
 )
 
