@@ -13,8 +13,8 @@ LOCATION = "us-central1"
 aiplatform.init(project=TARGET_PROJECT, location=LOCATION)
 
 # 앞서 복사하여 생성된 커스텀 모델의 ID 또는 리소스 이름
-MODEL_ID = "faker-251230-model" 
-# 또는 "projects/676700407951/locations/us-central1/models/faker-251230-model"
+MODEL_ID = "target-model-260213" 
+# 또는 "projects/676700407951/locations/us-central1/models/target-model-260213"
 
 print(f"[{TARGET_PROJECT}] 환경의 모델 [{MODEL_ID}] 인스턴스화...")
 model = aiplatform.Model(model_name=MODEL_ID)
