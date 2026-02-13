@@ -148,8 +148,8 @@ sequenceDiagram
     participant Target as Target 프로젝트 (도착지)<br>aiplatform.init()
     participant Source as Source 프로젝트 (출발지)<br>Model Registry
 
-    Note over User,Target: [필수 IAM 권한]<br>Target 프로젝트: Vertex AI 관리자 (생성 권한)
-    Note over User,Source: [필수 IAM 권한]<br>Source 프로젝트: Vertex AI 사용자 (읽기 권한)<br>Source 프로젝트: 저장소 개체 뷰어 (GCS 읽기 권한)
+    Note over User,Target: [필수 IAM 권한]<br>Target 프로젝트: Vertex AI Administrator
+    Note over User,Source: [필수 IAM 권한]<br>Source 프로젝트: Vertex AI Viewer<br>Source 프로젝트: Storage Object Viewer
 
     User->>Target: 1. Vertex AI Client 초기화 (Target 프로젝트 기준)
     User->>Source: 2. 복사할 Source 원본 모델 객체 초기화
