@@ -10,6 +10,25 @@ AWS EC2와 같은 외부 클라우드 환경에서 Google Cloud 리소스(Vertex
 ## 1. 개요 및 사전 준비
 
 - **동작 원리**: AWS 인스턴스의 자격 증명(임시 토큰)을 Google Cloud에 제출하여 Google 측 서비스 계정으로 즉시 권한을 위임받습니다.
+
+### 🏗️ Workload Identity Federation 아키텍처 흐름도
+
+```mermaid
+sequenceDiagram
+    participant EC2 as AWS EC2 (Python Script)
+    participant AWS_STS as AWS STS (Security Token Service)
+    participant GCP_STS as Google Cloud STS
+    participant Vertex as Google Cloud Vertex AI
+
+    EC2->>AWS_STS: 1. 내 IAM 연기(AssumeRole) 및 임시 자격 증명 요청
+    AWS_STS-->>EC2: 2. 임시 AWS 토큰(자격 증명) 발급
+    EC2->>GCP_STS: 3. AWS 토큰 제출 및 WIF(환전) 요청 (wif-config.json 참조)
+    Note over GCP_STS: 4. 토큰 유효성 검증 및<br>Pool/Provider 신뢰 관계 확인
+    GCP_STS-->>EC2: 5. 수명이 짧은 Google Cloud 연합 토큰(Access Token) 발급
+    EC2->>Vertex: 6. Google Access Token으로 Vertex AI 모델 복사/호출
+    Vertex-->>EC2: 7. 리소스 응답 (성공)
+```
+
 - **사전 요구사항**:
   - 두 클라우드 모두 최소 한 번씩 CLI(`aws`, `gcloud`)나 Console에서 관리자 권한을 가질 것
   - Google Cloud 프로젝트 ID
