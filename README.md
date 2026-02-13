@@ -140,6 +140,26 @@ print(response.text)
 
 학습이 끝난 `기존(Source)` 프로젝트의 모델을 `신규/타겟(Target)` 프로젝트로 이전 또는 공유해야 할 때의 가이드입니다.
 
+### 🏗️ 모델 복제 (Cross-Project Copy) 아키텍처 및 IAM 권한 흐름
+
+```mermaid
+sequenceDiagram
+    participant User as 개발자 (또는 파이프라인)
+    participant Target as Target 프로젝트 (도착지)<br>aiplatform.init()
+    participant Source as Source 프로젝트 (출발지)<br>Model Registry
+
+    Note over User,Target: [필수 IAM 권한]<br>Target 프로젝트: Vertex AI 관리자 (생성 권한)
+    Note over User,Source: [필수 IAM 권한]<br>Source 프로젝트: Vertex AI 사용자 (읽기 권한)
+
+    User->>Target: 1. Vertex AI Client 초기화 (Target 프로젝트 기준)
+    User->>Source: 2. 복사할 Source 원본 모델 객체 초기화
+    Source-->>User: 3. Source 모델 메타데이터 반환 (aiplatform.models.get)
+    User->>Target: 4. Target 프로젝트로 Model.copy() 실행 (업로드 요청)
+    Target->>Source: 5. 내부적으로 모델 가중치(Artifacts) 접근 및 복사
+    Source-->>Target: 6. Model Artifacts 전송 완료
+    Target-->>User: 7. Target 프로젝트 내 신규 모델 등록 완료 (aiplatform.models.upload)
+```
+
 ### 5.1 GCS 및 IAM 권한 열어주기
 `신규명/타겟명` 프로젝트가 `기존명/소스명` 프로젝트의 모델 또는 학습 데이터에 접근하려면 IAM 작업이 필요합니다.
 
