@@ -32,7 +32,7 @@ print(f"Initiating copy to Target Project: {TARGET_PROJECT}...")
 try:
     copied_model = source_model_obj.copy(
         destination_location="us-central1",
-        destination_model_id="faker-251230-model"
+        destination_model_id="target-model-260213"
     )
     print(f"\n✅ Copy Successful! Copied Model Resource Name:")
     print(copied_model.resource_name)
