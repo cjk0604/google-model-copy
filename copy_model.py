@@ -14,6 +14,7 @@ print("Initializing Vertex AI Client...")
 
 TARGET_PROJECT = "gemini-fine-tuning-target"
 SOURCE_PROJECT = "gemini-fine-tuning-source"
+
 # 모델 복사를 위해 대상 프로젝트를 지정하여 초기화합니다.
 aiplatform.init(project=TARGET_PROJECT, location="us-central1")
 
