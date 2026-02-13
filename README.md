@@ -44,6 +44,13 @@ export GOOGLE_APPLICATION_CREDENTIALS="/home/ubuntu/key.json"
 > - [로컬 개발 환경 인증(ADC 설정)](https://cloud.google.com/docs/authentication/provide-credentials-adc#local-dev)
 > - [서비스 계정 키를 사용한 리소스 권한 부여](https://cloud.google.com/docs/authentication/provide-credentials-adc#attached-sa)
 
+**❓ 서비스 계정 JSON 키는 어디서 발급받나요?**
+1. Google Cloud Console 메뉴에서 **IAM 및 관리자 > 서비스 계정(Service Accounts)** 으로 이동합니다.
+2. 상단의 **[+ 서비스 계정 만들기]** 를 클릭하여 목적에 맞는 계정을 생성합니다.
+   - 이때 `Target 프로젝트`와 `Source 프로젝트` 양쪽 모두에 필요한 권한(**Vertex AI 관리자/사용자** 등)을 부여해야 합니다.
+3. 생성된 서비스 계정 목록에서 해당 계정을 클릭한 후 **[키(Keys)]** 탭으로 이동합니다.
+4. **[키 추가(Add Key)] > [새 키 만들기]** 를 클릭하고 **JSON 유형**을 선택하여 다운로드 받습니다.
+
 ---
 
 ## 2. 학습 데이터 준비 (JSONL 포맷)
