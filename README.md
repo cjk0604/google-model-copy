@@ -1,6 +1,6 @@
 # Vertex AI: Gemini 파인튜닝 및 프로젝트 간 복제 가이드
 
-본 가이드는 Google Cloud Vertex AI 환경에서 기존 Gemini 모델(Flash/Pro 등)을 파인튜닝(지도 학습, Supervised Fine-Tuning)하고, 생성된 커스텀 모델을 다른 프로젝트로 복사 및 공유하는 전체 엔드투엔드(End-to-End) 절차를 안내합니다.
+본 가이드는 Google Cloud Vertex AI 환경에서 기존 Gemini 모델(Flash/Pro 등)을 파인튜닝(지도 학습, Supervised Fine-Tuning)하고, 생성된 커스텀 모델을 다른 프로젝트로 복사 및 공유하는 전체 엔드투엔드(End-to-End) 절차를 안내합니다..
 
 ## 1. 사전 준비 (Prerequisites)
 
